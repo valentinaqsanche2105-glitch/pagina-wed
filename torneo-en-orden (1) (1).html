@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Torneo en Orden</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5ef;--ink:#16221a;--mut:#56645a;--card:#fff;--line:#d5dccf;--pitch:#1f6b3a;--yel:#f2c200;--red:#d62f2f;--grn:#2e9d57;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a13;--ink:#e8efe6;--mut:#9fb0a3;--card:#18271d;--line:#2c4032;--pitch:#4cc27a}}
+:root[data-theme="dark"]{--bg:#0f1a13;--ink:#e8efe6;--mut:#9fb0a3;--card:#18271d;--line:#2c4032;--pitch:#4cc27a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Barlow,system-ui,sans-serif}
+h1,h2,h3{font-family:'Barlow Condensed',Impact,sans-serif;line-height:1.05;margin:0 0 .5em}
+h1{font-size:clamp(2.6rem,8vw,5.2rem);font-weight:800;text-transform:uppercase}
+h2{font-size:clamp(2rem,5vw,3rem);font-weight:800}
+h3{font-size:1.3rem;font-weight:600}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5;display:flex;gap:1rem;padding:.6rem 1rem;overflow-x:auto;white-space:nowrap}
+nav a{color:var(--mut);text-decoration:none;font-weight:600;font-size:.95rem}
+nav a:hover{color:var(--pitch)}
+section,header{max-width:980px;margin:0 auto;padding:3.5rem 1.2rem}
+p{max-width:68ch}
+.lead{font-size:1.15rem}
+.btn{display:inline-block;background:var(--pitch);color:#fff;border:0;padding:.7rem 1.2rem;border-radius:6px;font:600 1rem Barlow,sans-serif;text-decoration:none;cursor:pointer;margin:.3rem .4rem .3rem 0}
+.btn.alt{background:transparent;color:var(--pitch);border:2px solid var(--pitch)}
+:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+.log{border-left:6px solid var(--pitch);margin-top:2rem;background:var(--card);padding:1rem 1.2rem}
+.log div{display:flex;gap:1rem;padding:.35rem 0;border-bottom:1px dashed var(--line)}
+.log b{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;color:var(--pitch);min-width:3.2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.box{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--yel);padding:1rem;border-radius:4px}
+.box.r{border-top-color:var(--red)}
+.box p{margin:0;font-size:.95rem;color:var(--mut)}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.three .box{border-top-color:var(--pitch)}
+.tree{display:grid;gap:.6rem}
+.tree .row{display:flex;flex-wrap:wrap;gap:.5rem}
+.tree .row span{flex:1 1 150px;background:var(--card);border:1px solid var(--line);padding:.5rem .7rem;font-size:.92rem;border-radius:4px}
+.tree .mid{background:var(--pitch);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.4rem;padding:1rem;text-align:center;border-radius:4px}
+.tag{font-weight:600;color:var(--mut);font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:1.5rem 0}
+.stats div{background:var(--card);border:1px solid var(--line);padding:1rem;border-radius:4px}
+.stats b{display:block;font:800 2.2rem 'Barlow Condensed',sans-serif;color:var(--pitch)}
+.laws p{margin:.4rem 0}
+.q{background:var(--card);border:1px solid var(--line);padding:.8rem 1rem;margin:.6rem 0;border-radius:4px}
+.q p{margin:0 0 .4rem}
+.q label{margin-right:1rem;cursor:pointer;font-weight:600}
+.res{padding:1.2rem;border-radius:6px;color:#111;font-weight:600;margin-top:1rem}
+.res strong{font:800 2.4rem 'Barlow Condensed',sans-serif;display:block}
+.check{display:block;margin:.3rem 0;cursor:pointer}
+.stage{background:var(--card);border:1px solid var(--line);padding:1rem 1.2rem;margin:.8rem 0;border-radius:4px}
+.stage h3 span{font:600 .9rem Barlow,sans-serif;color:var(--mut);margin-left:.5rem}
+textarea,input,select{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:.5rem;width:100%}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin:1rem 0}
+.round{background:var(--card);border:1px solid var(--line);padding:.8rem 1rem;margin:.6rem 0;border-radius:4px}
+.round div{padding:.15rem 0}
+.rest{color:var(--mut);font-style:italic}
+.out{display:flex;gap:1.5rem;flex-wrap:wrap;margin:1rem 0}
+.out b{font:800 2rem 'Barlow Condensed',sans-serif;color:var(--pitch);display:block}
+.reg{counter-reset:c}
+.reg li{padding:.6rem 0;border-bottom:1px solid var(--line);font-weight:600}
+</style>
+</head>
+<body>
+<nav>
+<a href="#problema">Problema</a><a href="#senales">Señales</a><a href="#causas">Causas</a><a href="#colombia">Colombia</a><a href="#diagnostico">Diagnóstico</a><a href="#comite">Comité</a><a href="#ruta">Ruta</a><a href="#programacion">Programación</a><a href="#reglamento">Reglamento</a>
+</nav>
+
+<header>
+<p class="tag">Deporte escolar y universitario</p>
+<h1>El desorden en los torneos deportivos del colegio y la universidad</h1>
+<p class="lead">Los torneos intercursos e interfacultades reúnen a estudiantes, docentes y barras, y con frecuencia se caen por la mala organización. Esta página explica el problema, ordena sus causas y sus efectos, y trae herramientas para que el próximo torneo salga bien.</p>
+<a class="btn" href="#diagnostico">Haz el autodiagnóstico</a><a class="btn alt" href="#programacion">Arma la programación</a>
+<div class="log">
+<h3>Bitácora de una jornada (caso ilustrativo)</h3>
+<div><b>07:30</b><span>La cancha está ocupada por una clase de educación física.</span></div>
+<div><b>08:10</b><span>El árbitro no llega y un estudiante de otro curso pita el partido.</span></div>
+<div><b>08:45</b><span>Un equipo juega con un estudiante inscrito también en otro equipo.</span></div>
+<div><b>09:30</b><span>Nadie sabe si el empate da un punto o se define por penaltis.</span></div>
+<div><b>10:15</b><span>Un jugador se tuerce el tobillo y no hay botiquín.</span></div>
+<div><b>11:00</b><span>La discusión pasa a la tribuna y la jornada queda suspendida.</span></div>
+</div>
+</header>
+
+<section id="problema">
+<h2>Un torneo que nace sin plan</h2>
+<p>Con frecuencia, el torneo interno de un colegio o de una universidad nace de la buena voluntad de un docente, de un grupo de estudiantes o de la oficina de bienestar. Esa voluntad pocas veces viene con un plan escrito, y el torneo arranca con fechas sueltas, reglas de palabra y canchas prestadas.</p>
+<p>Por eso los problemas salen a la luz desde la primera jornada. Los partidos cambian de hora sin aviso, nadie sabe quién arbitra y las dudas del reglamento se resuelven a gritos en la cancha. Con el paso de las semanas los equipos pierden interés, el calendario se estira y muchos torneos terminan sin final y sin premiación.</p>
+<p>Además, el desorden tiene un costo que pocas veces se cuenta. Los estudiantes pierden horas de clase en jornadas que no se juegan, la institución gasta en implementos que nadie controla y el deporte deja de cumplir su papel formativo.</p>
+<div class="three">
+<div class="box"><h3>Planteamiento</h3><p>Los torneos deportivos internos de colegios y universidades presentan desorden en su planeación, en su reglamentación y en su ejecución, y ese desorden reduce la participación, genera conflictos y desaprovecha el deporte como herramienta de formación.</p></div>
+<div class="box"><h3>Pregunta</h3><p>¿Qué factores explican el desorden en la organización de los torneos deportivos internos y qué medidas de gestión pueden corregirlo?</p></div>
+<div class="box"><h3>Objetivo</h3><p>Proponer un modelo básico de organización para torneos deportivos internos que reduzca el desorden en su planeación y en su desarrollo.</p></div>
+</div>
+</section>
+
+<section id="senales">
+<h2>Señales de un torneo desordenado</h2>
+<p>El desorden se nota en detalles concretos que cualquier jugador, delegado o docente reconoce en la primera semana.</p>
+<h3>Tarjeta amarilla: fallas que traban el torneo</h3>
+<div class="grid">
+<div class="box"><h3>Calendario que cambia</h3><p>Las fechas se mueven por evaluaciones, actos culturales o lluvia, y los equipos se enteran en la cancha.</p></div>
+<div class="box"><h3>Reglas de palabra</h3><p>El reglamento no existe por escrito, o existe y ningún delegado lo ha leído.</p></div>
+<div class="box"><h3>Inscripciones sin control</h3><p>Un mismo jugador aparece en dos equipos y las listas cambian a mitad del torneo.</p></div>
+<div class="box"><h3>Arbitraje improvisado</h3><p>Cualquier estudiante libre pita el partido sin preparación, y cada fallo termina en discusión.</p></div>
+<div class="box"><h3>Escenarios sin reservar</h3><p>La cancha se cruza con clases, eventos u otro deporte a la misma hora.</p></div>
+<div class="box"><h3>Resultados perdidos</h3><p>Los marcadores quedan en una hoja suelta o en un chat, y nadie lleva la tabla de posiciones.</p></div>
+</div>
+<h3 style="margin-top:1.8rem">Tarjeta roja: fallas que ponen en riesgo la convivencia o la salud</h3>
+<div class="grid">
+<div class="box r"><h3>Sanciones al ojo</h3><p>Cada pelea o cada W.O. se resuelve distinto según quién esté presente ese día.</p></div>
+<div class="box r"><h3>Salud sin plan</h3><p>La jornada empieza sin botiquín, sin hidratación y sin una persona a cargo de los primeros auxilios.</p></div>
+</div>
+</section>
+
+<section id="causas">
+<h2>Árbol de problemas</h2>
+<p>Cada señal tiene un origen. El árbol ordena las causas en la raíz, el problema central en el tronco y los efectos en las ramas.</p>
+<div class="tree">
+<p class="tag">Efectos</p>
+<div class="row"><span>Equipos que abandonan y baja participación</span><span>Conflictos, peleas y sanciones injustas</span><span>Lesiones sin atención oportuna</span><span>Torneos que no terminan y recursos mal usados</span><span>Pérdida de confianza en bienestar y en la institución</span></div>
+<div class="mid">Desorden en la organización de los torneos deportivos internos</div>
+<p class="tag">Causas</p>
+<div class="row"><span>Planeación tardía y sin cronograma</span><span>Reglamento inexistente o desconocido</span><span>Comité sin funciones claras</span><span>Pocos recursos, implementos y escenarios</span><span>Comunicación informal y por rumores</span><span>Poca formación en arbitraje y gestión deportiva</span></div>
+</div>
+<p style="margin-top:1.2rem"><strong>En consecuencia,</strong> cinco de las seis causas dependen de la gestión y solo una depende del presupuesto, de modo que buena parte del problema tiene arreglo con planeación.</p>
+</section>
+
+<section id="colombia">
+<h2>El marco en Colombia</h2>
+<p>En Colombia, el deporte escolar y universitario tiene respaldo en la ley: la educación física, la recreación y el deporte son un área obligatoria del colegio, la ley del deporte reconoce el deporte formativo y el universitario, y cada universidad debe destinar una parte fija de su presupuesto al bienestar de sus estudiantes.</p>
+<p>Los Juegos Intercolegiados Nacionales muestran cómo se ordena un torneo grande: su edición 2026 se rige por la Resolución 000215 del 11 de marzo de 2026, tiene un manual de convivencia y un reglamento de disciplina y sanciones, y comunica los cambios por medio de boletines técnicos.</p>
+<p>En la educación superior, ASCUN organiza los Juegos Nacionales Universitarios; su edición XXXII quedó programada en Bucaramanga del 17 al 31 de octubre de 2025, con la Universidad de Santander (UDES) a la cabeza de la organización.</p>
+<p>Por consiguiente, el torneo del colegio o de la universidad puede copiar esa estructura a pequeña escala, con un reglamento, un comité y un canal oficial de información.</p>
+<div class="laws">
+<p><strong>Ley 30 de 1992.</strong> Organiza la educación superior y obliga a cada institución a destinar por lo menos el 2 % de su presupuesto de funcionamiento al bienestar universitario.</p>
+<p><strong>Ley 115 de 1994.</strong> Ley General de Educación, que incluye la educación física, la recreación y el deporte entre las áreas obligatorias y fundamentales.</p>
+<p><strong>Ley 181 de 1995.</strong> Ley del deporte, que reconoce entre otras formas el deporte formativo, el social comunitario y el universitario.</p>
+<p><strong>Ley 1967 de 2019.</strong> Transforma a Coldeportes en el Ministerio del Deporte.</p>
+<p><strong>Resolución 000215 de 2026.</strong> Norma reglamentaria de los Juegos Intercolegiados Nacionales 2026.</p>
+</div>
+<h3 style="margin-top:1.5rem">Juegos Intercolegiados 2026 en cifras</h3>
+<div class="stats">
+<div><b>318.847</b>estudiantes deportistas inscritos en todo el país</div>
+<div><b>8.315</b>instituciones educativas participantes</div>
+<div><b>32</b>departamentos con inscritos</div>
+<div><b>5.957</b>deportistas en la final nacional de Bogotá, del 13 al 30 de noviembre</div>
+</div>
+<p class="tag">Datos de la Alcaldía de Santiago de Cali (mayo de 2026) y de la Alcaldía de Bogotá (junio de 2026).</p>
+</section>
+
+<section id="diagnostico">
+<h2>¿Cuánto desorden tiene tu torneo?</h2>
+<p>Responde las diez preguntas con los datos de tu torneo. Cada «Sí» suma 2 puntos y cada «A medias» suma 1.</p>
+<div id="qs"></div>
+<div class="res" id="res"></div>
+</section>
+
+<section id="comite">
+<h2>Un comité con funciones claras</h2>
+<p>Un torneo ordenado necesita un comité donde cada integrante sabe de qué responde.</p>
+<div class="grid">
+<div class="box"><h3>Coordinación general</h3><p>Dirige el torneo, convoca las reuniones y firma las decisiones del comité.</p></div>
+<div class="box"><h3>Comité técnico</h3><p>Arma la programación, recibe las planillas y publica resultados y tabla de posiciones.</p></div>
+<div class="box"><h3>Juzgamiento</h3><p>Consigue los árbitros, los prepara en el reglamento y organiza la mesa de control.</p></div>
+<div class="box"><h3>Comité disciplinario</h3><p>Estudia los informes arbitrales y aplica las sanciones que fija el reglamento.</p></div>
+<div class="box"><h3>Logística y escenarios</h3><p>Reserva canchas y horarios, y tiene listos balones, petos, mallas e hidratación.</p></div>
+<div class="box"><h3>Salud</h3><p>Lleva el botiquín a cada jornada y conoce la ruta de atención en caso de lesión.</p></div>
+<div class="box"><h3>Comunicaciones</h3><p>Publica convocatoria, programación, cambios y resultados por un solo canal oficial.</p></div>
+<div class="box"><h3>Delegados de equipo</h3><p>Representan a cada equipo, firman las planillas y son los únicos que presentan reclamos.</p></div>
+</div>
+<p style="margin-top:1rem">En un colegio pequeño una misma persona puede cubrir dos funciones, siempre que la asignación quede por escrito.</p>
+</section>
+
+<section id="ruta">
+<h2>Ruta de organización en cinco etapas</h2>
+<p>El comité sigue una ruta con tiempos definidos, y cada tarea se puede marcar a medida que avanza el trabajo.</p>
+<p><strong id="cnt">0 de 20 tareas</strong> <button class="btn alt" id="clr" type="button">Desmarcar todo</button></p>
+<div id="stages"></div>
+</section>
+
+<section id="programacion">
+<h2>Generador de programación</h2>
+<p>La programación deja de ser un dolor de cabeza cuando se arma con un método fijo. Esta herramienta reparte las jornadas, cuenta los partidos y estima los días de juego a partir de la lista de equipos.</p>
+<label for="teams"><strong>Equipos, uno por línea</strong> (los que aparecen son de ejemplo)</label>
+<textarea id="teams" rows="6">Economía
+Contaduría Pública
+Administración de Empresas
+Ingeniería de Sistemas
+Ingeniería Ambiental</textarea>
+<div class="form">
+<label>Formato<select id="fmt"><option value="1">Todos contra todos</option><option value="2">Ida y vuelta</option></select></label>
+<label>Min. por partido<input id="mins" type="number" min="10" value="50"></label>
+<label>Canchas<input id="courts" type="number" min="1" value="1"></label>
+<label>Horas por día<input id="hours" type="number" min="1" value="2"></label>
+</div>
+<p class="tag">Los minutos incluyen el cambio entre un partido y el siguiente.</p>
+<button class="btn" id="shuf" type="button">Sortear orden</button><button class="btn alt" id="copy" type="button">Copiar programación</button>
+<div class="out" id="out"></div>
+<div id="rounds"></div>
+<p class="tag">Con un número impar de equipos, cada jornada un equipo descansa. Los días suponen todas las canchas ocupadas sin pausas.</p>
+</section>
+
+<section id="reglamento">
+<h2>Reglamento mínimo</h2>
+<p>Un reglamento escrito evita muchas discusiones en la cancha. Estos son los primeros capítulos de los doce que cubren los casos que suelen causar peleas en un torneo interno.</p>
+<ol class="reg">
+<li>Objeto y alcance</li>
+<li>Inscripción y elegibilidad</li>
+<li>Equipos y delegados</li>
+</ol>
+</section>
+
+<script>
+const QS=["¿El torneo tiene un reglamento escrito que conocen todos los delegados?","¿La programación de partidos se publica antes de la primera jornada?","¿Las canchas y los horarios están reservados con la administración?","¿Existe un comité organizador con funciones asignadas por escrito?","¿Los árbitros tienen formación o experiencia en el deporte que pitan?","¿Las inscripciones cierran en una fecha fija y con verificación de documentos?","¿Hay un canal oficial para publicar resultados, cambios y sanciones?","¿Cada jornada tiene botiquín y una persona encargada de primeros auxilios?","¿Las sanciones están definidas desde el inicio y las aplica un comité?","¿El torneo termina con una evaluación y un informe final?"];
+const qs=document.getElementById('qs');
+QS.forEach((t,i)=>{const d=document.createElement('div');d.className='q';
+d.innerHTML=`<p>${i+1}. ${t}</p>`+[['Sí',2],['A medias',1],['No',0]].map(([l,v],j)=>`<label><input type="radio" style="width:auto" name="q${i}" value="${v}" ${j==2?'checked':''}> ${l}</label>`).join('');
+qs.appendChild(d)});
+function score(){let s=0;for(let i=0;i<10;i++)s+=+document.querySelector(`input[name=q${i}]:checked`).value;
+const r=document.getElementById('res');let c,m,x;
+if(s>=16){c='#2e9d57';m='Tarjeta verde';x='El torneo está bien organizado. Sigue con la evaluación final.'}
+else if(s>=10){c='#f2c200';m='Tarjeta amarilla';x='El torneo funciona, pero tiene fallas que conviene corregir antes de la próxima jornada.'}
+else{c='#d62f2f';m='Tarjeta roja';x='El desorden manda en este torneo: el comité y el reglamento deben quedar listos antes de seguir con la programación.'}
+r.style.background=c;r.style.color=c=='#d62f2f'?'#fff':'#111';
+r.innerHTML=`<strong>${s}/20 · ${m}</strong>${x}`+(s<16?'<br><br>Puntos para corregir primero: reserva formal de escenarios y horarios, árbitros con preparación previa, botiquín y encargado de salud en cada jornada, y comité disciplinario con sanciones definidas.':'')}
+qs.addEventListener('change',score);score();
+
+const ST=[["Planeación","seis semanas antes",["Deportes, ramas y categorías definidos","Comité organizador conformado","Presupuesto y lista de implementos","Canchas y horarios reservados por escrito","Reglamento general y disciplinario redactado"]],["Convocatoria e inscripción","cuatro semanas antes",["Convocatoria publicada en el canal oficial","Planilla de inscripción con documento y curso o programa","Fecha límite de inscripción y de cambios","Verificación de jugadores repetidos entre equipos"]],["Congreso técnico","dos semanas antes",["Reunión con los delegados de todos los equipos","Lectura y aprobación del reglamento","Sorteo y publicación de la programación","Acta firmada por los delegados"]],["Desarrollo","durante el torneo",["Planilla de juego firmada en cada partido","Resultados y tabla publicados el mismo día","Botiquín y encargado de salud en cada jornada","Boletín semanal con sanciones y cambios"]],["Cierre y evaluación","última semana",["Final y premiación en la fecha prevista","Encuesta corta a jugadores y delegados","Informe final con aprendizajes","Devolución e inventario de implementos"]]];
+const sg=document.getElementById('stages');let n=0;
+ST.forEach(([t,w,items],i)=>{const d=document.createElement('div');d.className='stage';
+d.innerHTML=`<h3>${i+1}. ${t}<span>${w}</span></h3>`+items.map(x=>`<label class="check"><input type="checkbox" style="width:auto"> ${x}</label>`).join('');sg.appendChild(d)});
+const cb=[...sg.querySelectorAll('input')];
+function cnt(){document.getElementById('cnt').textContent=cb.filter(x=>x.checked).length+' de '+cb.length+' tareas'}
+cb.forEach(x=>x.addEventListener('change',cnt));
+document.getElementById('clr').onclick=()=>{cb.forEach(x=>x.checked=false);cnt()};cnt();
+
+let list=[];
+function teams(){return document.getElementById('teams').value.split('\n').map(s=>s.trim()).filter(Boolean)}
+function rr(t){const a=t.slice();if(a.length%2)a.push(null);const n=a.length,R=[];
+for(let r=0;r<n-1;r++){const m=[];let rest=null;
+for(let i=0;i<n/2;i++){const x=a[i],y=a[n-1-i];if(x===null)rest=y;else if(y===null)rest=x;else m.push([x,y])}
+R.push({m,rest});a.splice(1,0,a.pop())}return R}
+function build(){const t=teams();const el=document.getElementById('rounds'),o=document.getElementById('out');
+if(t.length<2){el.innerHTML='<p>Escribe al menos dos equipos.</p>';o.innerHTML='';list=[];return}
+let R=rr(t);if(document.getElementById('fmt').value=='2')R=R.concat(R.map(r=>({m:r.m.map(([a,b])=>[b,a]),rest:r.rest})));
+list=R;const P=R.reduce((s,r)=>s+r.m.length,0);
+const mins=+document.getElementById('mins').value||50,c=Math.max(1,+document.getElementById('courts').value||1),h=Math.max(1,+document.getElementById('hours').value||1);
+const per=Math.max(1,Math.floor(h*60/mins))*c,days=Math.ceil(P/per);
+o.innerHTML=`<div><b>${t.length}</b>equipos</div><div><b>${R.length}</b>jornadas</div><div><b>${P}</b>partidos</div><div><b>${days}</b>días de juego estimados</div>`;
+el.innerHTML=R.map((r,i)=>`<div class="round"><h3>Jornada ${i+1} <span class="tag">${r.m.length} partidos</span></h3>`+r.m.map(([a,b])=>`<div>${a} <strong>vs</strong> ${b}</div>`).join('')+(r.rest?`<div class="rest">Descansa ${r.rest}</div>`:'')+'</div>').join('')}
+['teams','fmt','mins','courts','hours'].forEach(id=>document.getElementById(id).addEventListener('input',build));
+document.getElementById('shuf').onclick=()=>{const t=teams();for(let i=t.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[t[i],t[j]]=[t[j],t[i]]}document.getElementById('teams').value=t.join('\n');build()};
+document.getElementById('copy').onclick=async e=>{const txt=list.map((r,i)=>`Jornada ${i+1}\n`+r.m.map(([a,b])=>`${a} vs ${b}`).join('\n')+(r.rest?`\nDescansa ${r.rest}`:'')).join('\n\n');
+try{await navigator.clipboard.writeText(txt);e.target.textContent='Copiada'}catch(x){e.target.textContent='No se pudo copiar'}setTimeout(()=>e.target.textContent='Copiar programación',1800)};
+build();
+</script>
+</body>
+</html>
